@@ -37,3 +37,15 @@ var getIntersectionNode = function(headA, headB) {
       return null;
   }
 };
+
+// 一个强的飞起的解法
+
+// var getIntersectionNode = function(headA, headB) {
+//     var a=headA, b=headB;
+//     while(a!=b){
+//         a = a? a.next : headB // move a to head of b if at end
+//         b = b? b.next : headA // move b to head of a if at end      
+//     }
+    
+//     return a; // 
+// };
