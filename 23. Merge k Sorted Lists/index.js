@@ -1,4 +1,5 @@
 /**
+ * 有 5 种方式可以去解决
  * Definition for singly-linked list.
  * function ListNode(val) {
  *     this.val = val;
