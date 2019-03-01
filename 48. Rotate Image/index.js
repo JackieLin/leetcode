@@ -71,22 +71,27 @@ var rotate = function(matrix) {
   var row, col;
   var temp;
 
-  for(var i = 0; i < len; i++) {
-    init = i + '' + 0;
-    data = matrix[i][0];
-    row = i;
-    col = 0;
-
-    while(true) {
-        if (row === i && col === 0) break;
-        temp = row;
-        row = col;
-        col = len - temp;
-
-        temp = data;
-        data = matrix[row][col];
-        matrix[row][col] = temp;
+  for(var index = 0; index < len; index++) {
+    for(var i = index; i < len - index; i++) {
+      init = true;
+      data = matrix[i][index];
+      row = i;
+      col = index;
+  
+      while(true) {
+          if (row === i && col === index && !init) break;
+          init = false;
+          temp = row;
+          row = col;
+          col = len - temp;
+  
+          temp = data;
+          data = matrix[row][col];
+          matrix[row][col] = temp;
+      }
     }
-  }  
+  }
+  
+  return matrix;
 };
 
