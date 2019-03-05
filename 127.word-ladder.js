@@ -96,16 +96,25 @@ var ladderLength = function(beginWord, endWord, wordList) {
     while(queue.length) {
         var source = queue.shift();
 
-        if (source[word] === endWord) return source.path.length;
+        if (source.word === endWord) {
+            return source.path.length + 1;
+        }
 
         for(var i = 0; i < len; i++) {
             if (source.path.indexOf(i) < 0 && isOneWordChange(source.word, wordList[i])) {
+                if (wordList[i] === endWord) {
+                    return source.path.length + 2;
+                }
+                
                 queue.push({
                     word: wordList[i],
-                    path: source[path].concat(i)
+                    path: source.path.concat(i)
                 })
             }
-        }    
+        }
+        
+        // console.log(queue);
+        // debugger;
     }
 
     return 0;
