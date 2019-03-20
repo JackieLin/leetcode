@@ -74,18 +74,15 @@ var findLadders = function (beginWord, endWord, wordList) {
     var wordMap = {};
     var word, left, right;
     var result = [];
-    var temp = [];
     var item;
-    var tempWord;
     var loop = true
-    var data = []
 
     // debugger;
     for(var i = 0; i < wordList.length; i++) {
         if (wordList[i] === endWord) break;
     }
 
-    if (i >= wordList.length) return data;
+    if (i >= wordList.length) return [];
 
     for (var i = 0; i < wordList.length; i++) {
         word = wordList[i];
@@ -100,41 +97,52 @@ var findLadders = function (beginWord, endWord, wordList) {
         }
     }
 
-    result = [{ map: { [beginWord]: true }, last: beginWord }];
+    result = [[beginWord]];
+    var visited = {};
+    var words = [];
+    var temp = [];
+    var level = 0;
 
+    // debugger;
     while (loop) {
         temp = [];
+        level++;
+
         for (var i = 0; i < result.length; i++) {
-            word = result[i].last
+            words = result[i]
+            word = words[words.length - 1];
+
             for (var j = 0; j < word.length; j++) {
                 left = word.substr(0, j);
                 right = word.substr(j + 1);
                 if (wordMap[left + '*' + right]) {
                     item = wordMap[left + '*' + right];
                     for (var k = 0; k < item.length; k++) {
-                        if (!result[i].map[item[k]]) {
-                            tempWord = { ...result[i] }
-                            tempWord.map = { ...result[i].map }
-                            tempWord.last = item[k];
-                            tempWord.map[item[k]] = true;
-                            temp.push(tempWord);
+                        if (item[k] === word) continue;
+
+                        if (!visited[item[k]] || visited[item[k]] >= level) {
+                            visited[item[k]] = level;
+                            temp.push(words.slice().concat(item[k]));
                         }
-                        if (item[k] === endWord) loop = false;
+                        if (loop && item[k] === endWord) loop = false;
                     }
                 }
             }
         }
 
-        if (temp && !temp.length) return data;
+        if (!temp.length) return [];
+
         result = temp;
     }
 
-    for(var i = 0; i <result.length; i++) {
-        if (result[i].last === endWord) {
-            data.push(Object.keys(result[i].map).map(v => v))
+    var data = []
+    for(var i = 0; i < result.length; i++) {
+        words = result[i]
+        word = words[words.length - 1];
+        if (word === endWord) {
+            data.push(words);
         }
     }
-
     return data;
 };
 
