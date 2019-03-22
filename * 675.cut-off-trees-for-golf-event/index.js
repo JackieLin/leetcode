@@ -82,6 +82,7 @@
  * 
  * cutOffTree([[1,2,3],[0,0,4],[7,6,5]])
     cutOffTree([[1,2,3], [0,0,0], [7,6,5]])
+    cutOffTree([[2,3,4], [0,0,5], [8,7,6]])
  */
 /**
  * @param {number[][]} forest
@@ -89,7 +90,9 @@
  */
 var cutOffTree = function(forest) {
     var row = forest.length;
+    if (!row) return 0;
     var col = forest[0].length;
+    if (!col) return 0;
     var trees = [];
     var queue = [];
     var min = 0;
@@ -107,6 +110,7 @@ var cutOffTree = function(forest) {
     trees = trees.sort((a, b) => a - b);
     i = j = 0
     var prevLength = 0;
+    var seen = [];
 
     while(trees.length) {
         queue = [{
@@ -122,11 +126,22 @@ var cutOffTree = function(forest) {
 
         prevLength = trees.length;
 
+        for(var k = 0; k < row; k++) {
+            seen[k] = [];
+            for(var t = 0; t < col; t++) {
+                seen[k][t] = false;
+            }
+        }
+
+        seen[i][j] = true;
+
         while(queue.length) {
             var item = queue.shift();
             i = item.i;
             j = item.j;
             var level = item.level;
+
+            if (!forest[i][j]) continue;
 
             if (forest[i][j] === trees[0]) {
                 trees.shift();
@@ -143,7 +158,8 @@ var cutOffTree = function(forest) {
                     i = i - 1;
                     trees.shift()
                     break;
-                } else {
+                } else if(!seen[i - 1][j]) {
+                    seen[i - 1][j] = true;
                     queue.push({
                         i: i - 1,
                         j,
@@ -161,7 +177,8 @@ var cutOffTree = function(forest) {
                     j = j + 1;
                     trees.shift()
                     break;
-                } else {
+                } else if(!seen[i][j + 1]) {
+                    seen[i][j + 1] = true;
                     queue.push({
                         i: i,
                         j: j + 1,
@@ -179,7 +196,8 @@ var cutOffTree = function(forest) {
                     i = i + 1;
                     trees.shift()
                     break;
-                } else {
+                } else if (!seen[i + 1][j]) {
+                    seen[i + 1][j] = true;
                     queue.push({
                         i: i + 1,
                         j,
@@ -197,7 +215,8 @@ var cutOffTree = function(forest) {
                     j = j - 1;
                     trees.shift()
                     break;
-                } else {
+                } else if (!seen[i][j - 1]){
+                    seen[i][j - 1] = true;
                     queue.push({
                         i,
                         j: j - 1,
