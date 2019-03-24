@@ -2,7 +2,8 @@
  * @lc app=leetcode id=149 lang=javascript
  *
  * [149] Max Points on a Line
- *
+ *  斜率相同，放一个 map 就可以了其实，map 的每一项便是斜率
+ * wiki：https://leetcode.com/problems/max-points-on-a-line/discuss/47230/Simple-JavaScript-solution
  * https://leetcode.com/problems/max-points-on-a-line/description/
  *
  * algorithms
@@ -52,6 +53,10 @@
  *     this.x = x;
  *     this.y = y;
  * }
+ * if (pi[0] === end[0] && pi[1] === end[1] && !visited[i]) {
+ * BigInt((end[1] - p1[1])) * BigInt((item[0] - end[0])) === BigInt((item[1] - end[1])) * BigInt((end[0] - p1[0]))
+ * if (pi.x === end.x && pi.y === end.y && !visited[i]) {
+ * BigInt((end.y - p1.y)) * BigInt((item.x - end.x)) === BigInt((item.y - end.y)) * BigInt((end.x - p1.x))
  */
 /**
  * @param {Point[]} points
@@ -59,38 +64,43 @@
  */
 var maxPoints = function (points) {
     var visited = {};
+    var max = 0;
+    if (!points) return 0;
+    if (points && points.length === 1) return 1;
 
-    function dfs(end, p1, p2) {
+    function dfs(end, p1, count) {
         if (!p1) {
+            var same = 1;
             for(var i = 0; i < points.length; i++) {
-                if (!visited[i]) {
+                var pi = points[i];
+                if (pi.x === end.x && pi.y === end.y && !visited[i]) {
+                    same++;
+                } else if (!visited[i]) {
                     visited[i] = true;
-                    dfs(points[i], end);
+                    dfs(points[i], end, 2);
                     visited[i] = false;
                 }
             }
-        } else if (!p2) {
+
+            if (max < same) {
+                max = same;
+            }
+        } else {
             for(var i = 0; i < points.length; i++) {
                 var item = points[i];
                 if (
                     !visited[i] &&
-                    (end[1] - p1[1]) * (item[0] - end[0]) === (item[1] - end[1]) * (end[0] - p1[0])
+                    BigInt((end.y - p1.y)) * BigInt((item.x - end.x)) === BigInt((item.y - end.y)) * BigInt((end.x - p1.x))
                 ) {
                     visited[i] = true;
-                    dfs(item, p1, end);
+                    dfs(end, p1, count + 1);
                     visited[i] = false;
+                    break;
                 }
             }
-        } else {
-            for (var i = 0; i < points.length; i++) {
-                if (
-                    !visited[i] &&
-                    (p2[0] - p1[0]) * (end[1] - p2[1]) === (p2[1] - p1[1]) * (end[0] - p2[0])
-                ) {
-                    visited[i] = true;
-                    dfs(points[i], p1, p2);
-                    visited[i] = false;
-                }
+
+            if (max < count) {
+                max = count;
             }
         }
     }
@@ -100,5 +110,7 @@ var maxPoints = function (points) {
         dfs(points[i])
         visited = {};
     }
+
+    return max;
 };
 
