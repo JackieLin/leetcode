@@ -69,7 +69,7 @@ var findPaths = function(m, n, N, i, j) {
         }
     }
 
-    debugger;
+    // debugger;
     function dfs(m,n, N, i, j) {
         if (i === m || j === n || i < 0 || j < 0) {
             return 1;
@@ -79,7 +79,7 @@ var findPaths = function(m, n, N, i, j) {
             return 0;
         }
 
-        if (memo[i][j][N]) {
+        if (memo[i][j][N] !== -1) {
             return memo[i][j][N];
         }
 
