@@ -44,16 +44,24 @@
 var maxProfit = function(prices, fee) {
     var result = 0;
     var length = prices.length;
+    var memo = [];
+
+    for(var i = 0; i < length; i++) {
+        memo[i] = -1;
+    }
+
     function dfs(start) {
         var max = 0;
         if (start >= length - 1) return 0;
+        
+        if (memo[start] !== -1) return memo[start];
 
         for(var i = start + 1; i < length; i++) {
             if (prices[start] < prices[i]) {
                 var j = i + 1;
                 while(j + 1 < length && prices[j] >= prices[j + 1]) j++;
 
-                var next = j + 1 >= length ? 0 : dfs(j);
+                var next = j >= length ? 0 : dfs(j);
 
                 var num = (prices[i] - prices[start] - fee) + next;
                 if (num > max) {
@@ -62,9 +70,12 @@ var maxProfit = function(prices, fee) {
             }
         }
 
+        memo[start] = max;
+        
         return max;
     }
     
+    debugger;
     for(var i = 0; i < length - 1; i++) {
         if (prices[i] < prices[i + 1]) {
             var data = dfs(i);
