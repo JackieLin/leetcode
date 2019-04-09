@@ -5,6 +5,9 @@
  *
  * https://leetcode.com/problems/partition-equal-subset-sum/description/
  *
+ * 注意，排序然后 dfs 能够减少很多判断，如果能正确找到的话，当然，如果是不正确的情况下面还是有很多判断
+ * 数组循环的 dfs 的时间复杂度为 (n + 1)!
+ * 
  * algorithms
  * Medium (40.19%)
  * Total Accepted:    79.9K
@@ -109,6 +112,7 @@ var canPartition = function(nums) {
     if (target % 2 !== 0 && nums.every(e => e % 2 === 0)) return false;
     nums.sort((a, b) => b - a);
     let used = Array(nums.length).fill(0);
+
     const dfs = (used, target, idx) => {
         if (target === 0) return true;
         if (idx === nums.length) return false;
