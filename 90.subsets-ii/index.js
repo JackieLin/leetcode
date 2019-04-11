@@ -37,14 +37,16 @@
  * @return {number[][]}
  */
 var subsetsWithDup = function(nums) {
+    if (!nums.length) return []
     var dp = [[]];
     var length = nums.length;
     nums = nums.sort((a, b) => a - b);
     var i = length - 1;
     var count = 1;
 
+    // debugger;
     while(i >= 0) {
-        if (nums[i] === nums[i - 1]) {
+        while (nums[i] === nums[i - 1]) {
             count++;
             i--;
         }
@@ -60,7 +62,8 @@ var subsetsWithDup = function(nums) {
             data.push(nums[i])
         }
 
-        var result = {...dp};
+        var result = dp.slice();
+
         for(var j = 0; j < dp.length; j++) {
             for(var k = 0; k < data.length; k++) {
                 result.push(dp[j].concat(data[k]))
