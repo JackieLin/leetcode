@@ -3,6 +3,7 @@
  *
  * [334] Increasing Triplet Subsequence
  *
+ * 用 num1， num2 分别表示最小的第二小的数，然后进行判断即可
  * https://leetcode.com/problems/increasing-triplet-subsequence/description/
  *
  * algorithms
