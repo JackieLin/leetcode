@@ -13,7 +13,7 @@
  *
  * Given a binary array, find the maximum length of a contiguous subarray with
  * equal number of 0 and 1. 
- * 
+ * 注意看解题思路，此题非常巧妙，利用打点的方式记录第一个值，0当成 -1 若 0 和 1 想等，那么下次同一个值加起来肯定也是相等的
  * 
  * Example 1:
  * 
@@ -42,31 +42,27 @@
  * @return {number}
  */
 var findMaxLength = function(nums) {
+    var arr = [];
     var length = nums.length;
-    var zero = 0;
-    var one = 0;
-    
+
+    for(var i = 0; i < 2 * length + 1; i++) {
+        arr[i] = -2;
+    }
+
+    arr[length] = -1;
+
+    var maxLen = 0;
+    var count = 0;
+
     for(var i = 0; i < length; i++) {
-        if (!nums[i]) {
-            zero++;
+        count += (!nums[i] ? -1 : 1);
+        if (arr[length + count] >= -1) {
+            maxLen = Math.max(maxLen, i - arr[length + count]);
         } else {
-            one++;
+            arr[length + count] = i;
         }
     }
-    function division(start, end, zero, one) {
-        if (start >= end) return 0;
 
-        if ((zero === 0 || one === 0) && zero !== one) return 0;
-
-        if (zero === one) {
-            return end - start + 1;
-        }
-        
-        return Math.max(
-            division(start + 1, end, nums[start] ? zero : zero - 1, nums[start] ? one - 1 : one), 
-            division(start, end - 1, nums[end] ? zero : zero - 1, nums[end] ? one - 1 : one));
-    }
-
-    return division(0, length - 1, zero, one);
+    return maxLen;
 };
 
