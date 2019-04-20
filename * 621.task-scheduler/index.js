@@ -35,7 +35,7 @@
  * ["A","A","A", "A", "B", "B", "C", "D"]
  * 
  * 
- * Note:
+ * Note: 
  * 
  * 
  * The number of tasks is in the range [1, 10000].
@@ -49,63 +49,32 @@
  * @return {number}
  */
 var leastInterval = function (tasks, n) {
-    var map = {};
-    var result = 0
-    for (var task of tasks) {
-        if (!map[task]) {
-            map[task] = 0;
+   var map = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0 ,0 ,0];
+   for(var task of tasks) {
+       var code = task.charCodeAt() - 65;
+       map[code] = map[code] + 1;
+   }
+
+//    debugger;
+   map = map.sort((a, b) => a - b);
+
+   var time = 0;
+
+   while(map[25] > 0) {
+    var i = 0;
+    while(i <= n) {
+        if (!map[25]) break;
+        if (i < 26 && map[25 - i] > 0) {
+            map[25 - i] -= 1;
         }
 
-        map[task] = map[task] + 1;
+        time++;
+        i++;
     }
 
-    var maxL;
-    var max = 0;
+    map = map.sort((a, b) => a - b);
+   }
 
-    for (var key in map) {
-        if (map[key] > max) {
-            max = map[k];
-            maxL = key;
-        }
-    }
-
-    delete map[maxL];
-
-    var keys = Object.keys(map);
-    var pos = 0;
-    var key;
-    var left = []
-
-    while (max > 0) {
-        pos = 0;
-        max--;
-        result++;
-        left = []
-        for (var i = 0; i < n; i++) {
-            // 找到
-            if (pos < keys.length) {
-                key = keys[pos]
-                while (map[key] <= 0 && pos < keys.length) key = keys[++pos];
-                if (map[key] > 0) {
-                    map[key] = map[key] - 1;
-
-                    if (!map[key]) {
-                        left.push(key);
-                    }
-                }
-                pos++;
-            }
-            result++;
-        }
-
-        if (left.length) {
-            for(var l in left) {
-                delete map[l];
-            }
-            keys = Object.keys(map);    
-        }
-    }
-
-    return result;
+   return time;
 };
 
