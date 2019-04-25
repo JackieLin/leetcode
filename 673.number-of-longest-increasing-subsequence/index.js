@@ -3,6 +3,8 @@
  *
  * [673] Number of Longest Increasing Subsequence
  *
+ * 采用动态规划的方式，注意，动态规划不是只意味着只能新建一个数组，有可能是新建多个数组进行比较，思路要开阔
+ * 
  * https://leetcode.com/problems/number-of-longest-increasing-subsequence/description/
  *
  * algorithms
@@ -51,13 +53,14 @@ var findNumberOfLIS = function(nums) {
     var count = [];
 
     for(var i = 0; i < length; i++) {
-        lengths[i] = 0;
+        lengths[i] = 1;
     }
 
     for(var i = 0; i < length; i++) {
         count[i] = 1;
     }
 
+    // debugger;
     for(var j = 0; j < length; j++) {
         for(var i = 0; i < j; i++) {
             if (nums[i] < nums[j]) {
@@ -65,7 +68,7 @@ var findNumberOfLIS = function(nums) {
                     lengths[j] = lengths[i] + 1;
                     count[j] = count[i];
                 } else if (lengths[i] + 1 === lengths[j]) {
-                    count[j] = count[i] + 1;
+                    count[j] += count[i];
                 }
             }
         }
@@ -78,9 +81,9 @@ var findNumberOfLIS = function(nums) {
         longest = Math.max(longest, len);
     }
 
-    for(var item of count) {
-        if (item === longest) {
-            ans += item;
+    for(var i = 0; i < length; i++) {
+        if (lengths[i] === longest) {
+            ans += count[i];
         }
     }
 
