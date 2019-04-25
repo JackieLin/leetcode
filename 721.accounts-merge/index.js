@@ -26,26 +26,35 @@ var accountsMerge = function(accounts) {
     function dfs(start) {
         var item = datas[start];
         item.seen = true;
+        var left = {};
 
         for(var key in item.map) {
             for(var i = 0; i < datas.length; i++) {
                 // 存在
                 if (datas[i].name === item.name && !datas[i].seen && datas[i].map[key]) {
-                    datas[i].seen = true;
-                    for(var ikey in datas[i].map) {
-                        if (!item.map[ikey]) item.map[ikey] = true;
+                    var itemData = dfs(i);
+                    for(var iData in itemData) {
+                        if (!left[iData]) left[iData] = true;
                     }
+                    // datas[i].seen = true;
+                    // for(var ikey in datas[i].map) {
+                    //     if (!item.map[ikey]) item.map[ikey] = true;
+                    // }
                 }
             }
         }
 
-        return item;
+        for(var l in left) {
+            if (!item.map[l]) item.map[l] = true;
+        }
+
+        return item.map;
     }
 
     for(var i = 0; i < datas.length; i++) {
         if (!datas[i].seen) {
             var item = dfs(i);
-            result.push([item.name, ...Object.keys(item.map).map(v => v).sort()]);
+            result.push([datas[i].name, ...Object.keys(item).sort()]);
         }
     }
 
