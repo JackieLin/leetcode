@@ -16,49 +16,56 @@
  * @return {ListNode}
  */
 var reverseKGroup = function (head, k) {
+    if (!head) return head;
     var start = head;
     while (start.next) {
         start.next.prev = start;
         start = start.next;
     }
-
-    var result;
-    var next = head;
-    var end = head;
-    var ix = 1;
+    
+    var next;
+    var node = head;
     var current;
 
-    while (head) {
+    while (node) {
+        var end = node;
+        var ix = 1;
+
         while (ix < k && end) {
             end = end.next;
             ix++;
         }
 
-        head = end.next;
-
-        if (ix >= k) {
+        if (ix >= k && end) {
+            node = end.next;
             var length = 1;
             next = end;
             while (length < k) {
                 next.next = next.prev;
+                next.prev = null;
+                next = next.next;
+                // console.log(next);
+                // console.log('=====')
+                // console.log(length)
+                next.next = null;
                 length++;
             }
-
+            
             if (current) {
                 current.next = end;
             } else {
-                result = end;
+                head = end;
+            }
+            
+            current = next;
+        } else {
+            if (current) {
+                current.next = node;
             }
 
-            current = next.next;
+            break;
         }
     }
 
-    // // 没有走完
-    // if (ix <= k) {
-    //     if (result) {
-    //     }
-    //     result = start;
-    // }
+    return head;
 };
-
