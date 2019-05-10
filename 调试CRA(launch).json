@@ -1,0 +1,33 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Cluster",
+            "console": "integratedTerminal",
+            "restart": true,
+            "cwd": "${workspaceFolder}/packages/react-scripts",
+            "program": "${workspaceFolder}/packages/react-scripts/scripts/start.js",
+            "args": ["start"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch via NPM",
+            "runtimeExecutable": "npm",
+            "autoAttachChildProcesses": true,
+            "console": "integratedTerminal",
+            "protocol": "auto",
+            "restart": true,
+            "runtimeArgs": [
+                "run-script",
+                "start"
+            ],
+            "port": 9229
+        }
+    ]
+}
