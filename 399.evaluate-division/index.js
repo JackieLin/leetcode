@@ -21,6 +21,7 @@ var calcEquation = function (equations, values, queries) {
     var map = {}
     var result = equations;
 
+    // debugger;
     for (var i = 0; i < equations.length; i++) {
         var item = equations[i]
         map[`${item[0]}-${item[1]}`] = values[i]
@@ -36,30 +37,33 @@ var calcEquation = function (equations, values, queries) {
         var left = []
         for (var i = 0; i < result.length - 1; i++) {
             var iItem = result[i]
-            for (var j = i + 1; j < result.length; j++) {
-                var jItem = result[j]
-                var itemMap = {}
-                itemMap[iItem[0]] = true;
-                itemMap[iItem[1]] = true;
-                itemMap[jItem[0]] = true;
-                itemMap[jItem[1]] = true;
-                // 全部不相等
-                if (Object.keys(itemMap) === 4) continue;
+            for (var key in map) {
+                var jItem = key.split('-')
+                if (jItem[0] === jItem[1]) continue;
+                if (iItem[0] === jItem[0] && iItem[1] === jItem[1]) continue;
+                if (iItem[0] === jItem[1] && iItem[1] === jItem[0]) continue;
+                // var itemMap = {}
+                // itemMap[iItem[0]] = true;
+                // itemMap[iItem[1]] = true;
+                // itemMap[jItem[0]] = true;
+                // itemMap[jItem[1]] = true;
+                // // 全部不相等
+                // if (Object.keys(itemMap).length === 4) continue;
 
-                if (iItem[1] === jItem[0]) {
-                    map[`${iItem[0]}-${jItem[1]}`] = values[i] * values[j]
+                if (iItem[1] === jItem[0] && !map[`${iItem[0]}-${jItem[1]}`]) {
+                    map[`${iItem[0]}-${jItem[1]}`] = map[`${iItem[0]}-${iItem[1]}`] * map[key]
                     map[`${jItem[1]}-${iItem[0]}`] = 1 / map[`${iItem[0]}-${jItem[1]}`]
                     left.push([iItem[0], jItem[1]])
-                } else if (iItem[1] === jItem[1]) {
-                    map[`${iItem[0]}-${jItem[0]}`] = values[i] * (1 / values[j])
+                } else if (iItem[1] === jItem[1] && !map[`${iItem[0]}-${jItem[0]}`]) {
+                    map[`${iItem[0]}-${jItem[0]}`] = map[`${iItem[0]}-${iItem[1]}`] * (1 / map[key])
                     map[`${jItem[0]}-${iItem[0]}`] = 1 / map[`${iItem[0]}-${jItem[0]}`]
                     left.push([iItem[0], jItem[0]]);
-                } else if (iItem[0] === jItem[0]) {
-                    map[`${jItem[1]}-${iItem[1]}`] = values[i] * (1 / values[j])
+                } else if (iItem[0] === jItem[0] && !map[`${jItem[1]}-${iItem[1]}`]) {
+                    map[`${jItem[1]}-${iItem[1]}`] = map[`${iItem[0]}-${iItem[1]}`] * (1 / map[key])
                     map[`${iItem[1]}-${jItem[1]}`] = 1 / map[`${jItem[1]}-${iItem[1]}`]
                     left.push([jItem[1], iItem[1]])
-                } else if (iItem[0] === jItem[1]) {
-                    map[`${jItem[0]}-${iItem[1]}`] = values[i] * values[j]
+                } else if (iItem[0] === jItem[1] && !map[`${jItem[0]}-${iItem[1]}`]) {
+                    map[`${jItem[0]}-${iItem[1]}`] = map[`${iItem[0]}-${iItem[1]}`] * map[key]
                     map[`${iItem[1]}-${jItem[0]}`] = 1 / map[`${jItem[0]}-${iItem[1]}`]
                     left.push([jItem[0], iItem[1]])
                 }
